@@ -5,7 +5,7 @@ import {
 } from "node:http2";
 import { createReadStream, readFileSync } from "node:fs";
 
-// using hhtp 2.0 becouse of limit of only 6 connections per_browser/per_domain on http 1.x
+// using hhtp 2.0 becouse of limit to only 6 connections per_browser/per_domain on http 1.x
 createSecureServer(
   {
     key: readFileSync(new URL("./key.pem", import.meta.url)), // also need https becouse of Chrome don't accept http 2 without TLS
