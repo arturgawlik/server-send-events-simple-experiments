@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>server send events simple experiments</title>
+    <style>
+        * {
+            color-scheme: dark;
+        }
+    </style>
+</head>
+<body>
+    
+    <h1>events:</h1>
+    <ul>
+        -- no events --
+    </ul>
+    <script type="module">
+        const eventsSource = new EventSource("/sse");
+        eventsSource.addEventListener("message", event => {
+            display(event.data);
+        });
+
+        function display(data) {
+            const ul = document.querySelector('ul');
+            if (!ul.querySelectorAll('li').length) {
+                ul.innerText = '';
+            }
+            const li = document.createElement("li");
+            li.innerText = data;
+            ul.appendChild(li);
+        }
+    </script>
+</body>
+</html>
