@@ -5,7 +5,7 @@ import {
 } from "node:http2";
 import { createReadStream, readFileSync } from "node:fs";
 
-// using hhtp 2.0 becouse of limit to only 6 connections per_browser/per_domain on http 1.x
+// using http 2.0 because of limit to only 6 connections per_browser/per_domain on http 1.x
 createSecureServer(
   {
     key: readFileSync(new URL("./key.pem", import.meta.url)), // also need https becouse of Chrome don't accept http 2 without TLS
@@ -34,7 +34,13 @@ function handleSSE(req, res) {
   res.write("data: heloooo\n\n");
 
   let i = 1;
-  setInterval(() => {
-    res.write(`data: message number ${i}, and will continue...\n\n`);
+  const intervalId = setInterval(() => {
+    res.write(`data: message number ${i++}, and will continue...\n\n`);
   }, 5000);
+
+  console.log("connection opened...");
+  req.on("close", () => {
+    clearInterval(intervalId);
+    console.log("connection closed...");
+  });
 }

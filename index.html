@@ -11,16 +11,44 @@
     </style>
 </head>
 <body>
-    
-    <h1>events:</h1>
+    <button id="connect-btn">
+        connect to sse
+    </button>
+    <button id="disconnect-btn">
+        disconnect from sse
+    </button>
+    <h1>events (open connections: <span>0</span>):</h1>
     <ul>
         -- no events --
     </ul>
     <script type="module">
-        const eventsSource = new EventSource("/sse");
-        eventsSource.addEventListener("message", event => {
-            display(event.data);
+        const connectBtn = document.querySelector("#connect-btn")
+        const disconnectBtn = document.querySelector("#disconnect-btn")
+
+        let eventsSources = [];
+
+        connectBtn.addEventListener("click", () => {
+            eventsSources.push(connect());
+            updateOpenConnections();
         });
+
+        disconnectBtn.addEventListener("click", () => {
+            eventsSources.pop()?.close();
+            updateOpenConnections();
+        });
+
+        function updateOpenConnections() {
+            const openConnections = document.querySelector("span");
+            openConnections.innerText = eventsSources.length;
+        }
+
+        function connect() {
+            const eventsSource = new EventSource("/sse");
+            eventsSource.addEventListener("message", event => {
+                display(event.data);
+            });
+            return eventsSource;
+        }        
 
         function display(data) {
             const ul = document.querySelector('ul');
