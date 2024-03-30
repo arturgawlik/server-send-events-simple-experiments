@@ -25,12 +25,9 @@ createSecureServer(
  * @param {Http2ServerResponse} res
  */
 function handleSSE(req, res) {
-  const headers = {
+  res.writeHead(200, {
     "Content-Type": "text/event-stream",
-    Connection: "keep-alive", // ?? no need in case of http 2??
-  };
-
-  res.writeHead(200, headers);
+  });
   res.write("data: heloooo\n\n");
 
   let i = 1;
